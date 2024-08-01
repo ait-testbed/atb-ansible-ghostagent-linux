@@ -3,5 +3,5 @@
 ghostagent_packages:
  - dotnet-sdk-8.0
 
-ghostsagent_user: "ubuntu"
+ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
