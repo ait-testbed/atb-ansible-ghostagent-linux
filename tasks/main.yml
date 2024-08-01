@@ -1,0 +1,41 @@
+---
+# tasks file for atb-ansible-ghostagent
+- name: Download microsoft repository
+  become: true
+  ansible.builtin.shell:
+    cmd: "wget https://packages.microsoft.com/config/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/packages-microsoft-prod.deb -O /opt/packages-microsoft-prod.deb"
+    creates: "/opt/packages-microsoft-prod.deb"
+  tags:
+    - install
+    - dependencies
+
+- name: Install microsoft repo
+  ansible.builtin.apt:
+    deb: "/opt/packages-microsoft-prod.deb"
+  tags:
+    - install
+    - dependencies
+
+- name: Install packages for ghost-agent
+  become: true
+  ansible.builtin.package:
+    name: "{{ ghostagent_packages }}"
+    update_cache: yes
+  tags:
+    - install
+    - dependencies
+
+- name: Unzip ghosts-agent
+  become: true
+  become_user: "{{ ghostsagent_user }}"
+  ansible.builtin.unarchive:
+    src: ghosts.tar.gz
+    dest: "{{ ghostagent_path }}"
+
+- name: Unzip chrome-linux
+  become: true
+  become_user: "{{ ghostsagent_user }}"
+  ansible.builtin.unarchive:
+    src: chrome-linux64.zip
+    dest: "{{ ghostagent_path }}"
+

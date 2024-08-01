@@ -1,0 +1,7 @@
+---
+# defaults file for atb-ansible-ghostagent
+ghostagent_packages:
+ - dotnet-sdk-8.0
+
+ghostsagent_user: "ubuntu"
+ghostagent_path: "/home/{{ ghostsagent_user }}/"
