@@ -17,7 +17,12 @@ ghostagent_packages:
 
 ghostsagent_user: "ubuntu"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
+
+
+ghostsserver_url: "http://192.168.100.184:5000/api"
 ```
+
+> **NOTE:** The `ghostsserver_url` has a default value. Remember to update it in the playbook with the actual ghostsserver address!
 
 Dependencies
 ------------
@@ -33,6 +38,8 @@ Example Playbook
   hosts: all
   roles:
     - role: atb-ansible-ghostagent
+      vars:
+        ghostsserver_url: "http://192.168.100.184:5000/api"
 ```
 
 License

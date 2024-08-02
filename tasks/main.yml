@@ -63,6 +63,16 @@
     - install
     - ghostagent
 
+- name: Update application.json with the ghostsserver url
+  become: true
+  become_user: "{{ ghostsagent_user }}"
+  ansible.builtin.template:
+    src: application.json.j2
+    dest: "~/ghosts/build_output/config/application.json"
+  tags:
+    - update
+    - ghostagent
+
 - name: Download google-chrome-stable
   become: true
   ansible.builtin.shell:

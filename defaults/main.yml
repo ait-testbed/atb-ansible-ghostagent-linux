@@ -5,3 +5,5 @@ ghostagent_packages:
 
 ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
+
+ghostsserver_url: "http://192.168.100.184:5000/api"
