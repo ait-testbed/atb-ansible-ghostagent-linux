@@ -3,5 +3,7 @@
 ghostagent_packages:
  - dotnet-sdk-8.0
 
-ghostsagent_user: "ubuntu"
+ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
+
+ghostsserver_url: "http://192.168.100.184:5000/api"
