@@ -15,9 +15,9 @@ Role Variables
 ghostagent_packages:
  - dotnet-sdk-8.0
 
-ghostsagent_user: "ubuntu"
+ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
-
+ghostagent_timeline_file: "timeline.json.j2"
 
 ghostsserver_url: "http://192.168.100.184:5000/api"
 ```
@@ -50,4 +50,4 @@ GPL-3.0
 Author Information
 ------------------
 
-Wolfgang Hotwagner
+Wolfgang Hotwagner, Anna Erdi
