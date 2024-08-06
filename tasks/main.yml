@@ -2,9 +2,9 @@
 # tasks file for atb-ansible-ghostagent
 - name: Download microsoft repository
   become: true
-  ansible.builtin.shell:
-    cmd: "wget https://packages.microsoft.com/config/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/packages-microsoft-prod.deb -O /opt/packages-microsoft-prod.deb"
-    creates: "/opt/packages-microsoft-prod.deb"
+  ansible.builtin.get_url:
+    url: "https://packages.microsoft.com/config/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/packages-microsoft-prod.deb"
+    dest: "/opt/packages-microsoft-prod.deb"
   tags:
     - install
     - dependencies
@@ -25,40 +25,41 @@
     - install
     - dependencies
 
-- name: Create ghosts directory and download ghosts v8.0.0
+- name: Download and unarchive ghosts v8.0.0
   become: true
   become_user: "{{ ghostsagent_user }}"
-  ansible.builtin.shell:
-    cmd: |
-      mkdir -p ~/ghosts
-      wget https://cmu.box.com/shared/static/tdozbmmdyvajubohwtnon1huyfqjuwrz.zip -O ~/ghosts/ghosts.zip
-    creates: "~/ghosts/ghosts.zip"
+  ansible.builtin.unarchive:
+    src: "https://cmu.box.com/shared/static/tdozbmmdyvajubohwtnon1huyfqjuwrz.zip"
+    dest: "{{ ghostagent_path }}"
+    remote_src: yes
   tags:
     - install
     - ghostagent
 
-- name: Unzip ghosts.zip and ghosts-client-linux-v8.0.0.zip
+- name: Unarchive ghosts inner zip file
   become: true
   become_user: "{{ ghostsagent_user }}"
-  ansible.builtin.shell:
-    cmd: |
-      unzip ~/ghosts/ghosts.zip -d ~/ghosts && \
-      unzip ~/ghosts/ghosts-client-linux-v8.0.0.zip -d ~/ghosts
-  args:
-    creates: "~/ghosts/ghosts-client-linux-v8.0.0"
+  ansible.builtin.unarchive:
+    src: "{{ ghostagent_path }}/ghosts-client-linux-v8.0.0.zip"
+    dest: "{{ ghostagent_path }}"
+    remote_src: yes
   tags:
     - install
     - ghostagent
 
-- name: Clean up zip files
-  become: true
-  become_user: "{{ ghostsagent_user }}"
+- name: Clean up zip file
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ ghostagent_path }}/ghosts-client-linux-v8.0.0.zip"
     state: absent
-  with_items:
-    - ~/ghosts/ghosts.zip
-    - ~/ghosts/ghosts-client-linux-v8.0.0.zip
+  tags:
+    - install
+    - ghostagent
+
+- name: Rename ghosts folder
+  become: true
+  become_user: "{{ ghostsagent_user }}"
+  ansible.builtin.command:
+    cmd: "mv {{ ghostagent_path }}/build_output/ {{ ghostagent_path }}/ghosts/"
   tags:
     - install
     - ghostagent
@@ -68,16 +69,16 @@
   become_user: "{{ ghostsagent_user }}"
   ansible.builtin.template:
     src: application.json.j2
-    dest: "~/ghosts/build_output/config/application.json"
+    dest: "{{ ghostagent_path }}/ghosts/config/application.json"
   tags:
-    - update
+    - install
     - ghostagent
 
 - name: Download google-chrome-stable
   become: true
-  ansible.builtin.shell:
-    cmd: "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /opt/google-chrome-stable_current_amd64.deb"
-    creates: "/opt/google-chrome-stable_current_amd64.deb"
+  ansible.builtin.get_url:
+    url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    dest: "/opt/google-chrome-stable_current_amd64.deb"
   tags:
     - install
     - chrome
@@ -99,19 +100,10 @@
     - install
     - chrome
 
-- name: Download ChromeDriver
-  become: true
-  ansible.builtin.shell:
-    cmd: "wget https://storage.googleapis.com/chrome-for-testing-public/{{ chrome_version.stdout }}/linux64/chromedriver-linux64.zip -O /opt/chromedriver-linux64.zip"
-    creates: "/opt/chromedriver-linux64.zip"
-  tags:
-    - install
-    - chrome
-
-- name: Unzip ChromeDriver
+- name: Download and unarchive ChromeDriver
   become: true
   ansible.builtin.unarchive:
-    src: /opt/chromedriver-linux64.zip
+    src: "https://storage.googleapis.com/chrome-for-testing-public/{{ chrome_version.stdout }}/linux64/chromedriver-linux64.zip"
     dest: /opt/
     remote_src: yes
   tags:
