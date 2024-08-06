@@ -74,6 +74,16 @@
     - install
     - ghostagent
 
+- name: Add ghostagent timeline file
+  become: true
+  become_user: "{{ ghostsagent_user }}"
+  ansible.builtin.template:
+    src: "{{ ghostagent_timeline_file }}"
+    dest: "{{ ghostagent_path }}/ghosts/config/timeline.json"
+  tags:
+    - update
+    - ghostagent
+
 - name: Download google-chrome-stable
   become: true
   ansible.builtin.get_url:

@@ -5,5 +5,6 @@ ghostagent_packages:
 
 ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
+ghostagent_timeline_file: "timeline.json.j2"
 
 ghostsserver_url: "http://192.168.100.184:5000/api"
