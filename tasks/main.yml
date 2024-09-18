@@ -99,3 +99,23 @@
   tags:
     - install
     - chrome
+
+- name: Deploy ghostagent systemd service
+  become: true
+  ansible.builtin.template:
+    src: ghosts.j2
+    dest: /etc/systemd/system/ghostagent.service
+  tags:
+    - start
+    - ghostagent
+
+- name: Enable and start ghostagent service
+  become: true
+  ansible.builtin.service:
+    name: ghostagent
+    enabled: "{{ ghostagent_autostart }}"
+    state: "{{ 'started' if ghostagent_autostart else 'stopped' }}"
+  when: ghostagent_autostart
+  tags:
+    - start
+    - ghostagent

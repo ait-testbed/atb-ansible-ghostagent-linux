@@ -3,6 +3,7 @@
 ghostagent_packages:
  - dotnet-sdk-8.0
 
+ghostagent_autostart: true  # Set this to false if you don't want to start ghosts as a service automatically
 ghostsagent_user: "aecid"
 ghostagent_path: "/home/{{ ghostsagent_user }}/"
 ghostagent_timeline_file: "timeline.json.j2"

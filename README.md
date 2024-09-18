@@ -1,7 +1,7 @@
 Ansible role to install ghostserver
 ===================================
 
-This role installs a [ghosts agent on Linux](https://github.com/cmu-sei/GHOSTS)
+This role installs a [ghosts agent on Linux](https://github.com/cmu-sei/GHOSTS) and optionally starts it as a service on boot.
 
 Requirements
 ------------
@@ -40,6 +40,7 @@ Example Playbook
     - role: atb-ansible-ghostagent
       vars:
         ghostsserver_url: "http://192.168.100.184:5000/api"
+        ghostagent_autostart: false
 ```
 
 License
