@@ -5,7 +5,7 @@ ghostagent_packages:
 
 ghostagent_autostart: true  # Set this to false if you don't want to start ghosts as a service automatically
 ghostsagent_user: "aecid"
-ghostagent_path: "/home/{{ ghostsagent_user }}/"
+ghostagent_path: "/home/{{ ghostsagent_user }}/ghosts-client-linux-v8.0.0"
 ghostagent_timeline_file: "timeline.json.j2"
 
 ghostsserver_url: "http://192.168.100.184:5000/api"
