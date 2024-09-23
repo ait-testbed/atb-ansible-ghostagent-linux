@@ -15,8 +15,9 @@ Role Variables
 ghostagent_packages:
  - dotnet-sdk-8.0
 
+ghostagent_autostart: true  # Set this to false if you don't want to start ghosts as a service automatically
 ghostsagent_user: "aecid"
-ghostagent_path: "/home/{{ ghostsagent_user }}/"
+ghostagent_path: "/home/{{ ghostsagent_user }}/ghosts-client-linux-v8.0.0"
 ghostagent_timeline_file: "timeline.json.j2"
 
 ghostsserver_url: "http://192.168.100.184:5000/api"
@@ -41,6 +42,18 @@ Example Playbook
       vars:
         ghostsserver_url: "http://192.168.100.184:5000/api"
         ghostagent_autostart: false
+```
+
+As the ghostagent is registered as a systemd service, you can use the 
+following commands for manual inspection:
+
+```shell
+systemctl enable ghostagent
+systemctl disable ghostagent
+systemctl start ghostagent
+systemctl stop ghostagent 
+systemctl restart ghostagent
+systemctl status ghostagent
 ```
 
 License
