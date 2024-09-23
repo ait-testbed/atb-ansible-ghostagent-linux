@@ -56,19 +56,13 @@
     - update
     - ghostagent
 
-- name: Download google-chrome-stable
+# Download chrome and chromedriver binaries from: https://googlechromelabs.github.io/chrome-for-testing/
+- name: Download google-chrome-stable binary
   become: true
-  ansible.builtin.get_url:
-    url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-    dest: "/opt/google-chrome-stable_current_amd64.deb"
-  tags:
-    - install
-    - chrome
-
-- name: Install google-chrome-stable
-  become: true
-  ansible.builtin.apt:
-    deb: "/opt/google-chrome-stable_current_amd64.deb"
+  ansible.builtin.unarchive:
+    src: "https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.58/linux64/chrome-linux64.zip"
+    dest: "{{ ghostagent_path }}/"
+    remote_src: yes
   tags:
     - install
     - chrome
@@ -76,7 +70,7 @@
 - name: Get Chrome version
   become: true
   ansible.builtin.shell:
-    cmd: "google-chrome --version | grep -oP '[0-9]+.[0-9]+.[0-9]+.[0-9]+'"
+    cmd: "{{ ghostagent_path }}/chrome-linux64/chrome --version | grep -oP '[0-9]+.[0-9]+.[0-9]+.[0-9]+'"
   register: chrome_version
   tags:
     - install
@@ -92,10 +86,10 @@
     - install
     - chrome
 
-- name: Move ChromeDriver to /usr/local/bin and make it executable
+- name: Move ChromeDriver to ghosts folder and make it executable
   become: true
   ansible.builtin.shell:
-    cmd: "mv /opt/chromedriver-linux64/chromedriver /usr/local/bin/ && chmod 0755 /usr/local/bin/chromedriver"
+    cmd: "mv /opt/chromedriver-linux64/chromedriver {{ ghostagent_path }}/ && chmod 0755 {{ ghostagent_path }}/chromedriver"
   tags:
     - install
     - chrome
