@@ -56,35 +56,6 @@
     - update
     - ghostagent
 
-# Download chrome and chromedriver binaries from: https://googlechromelabs.github.io/chrome-for-testing/
-- name: Download google-chrome-stable binary
-  become: true
-  ansible.builtin.unarchive:
-    src: "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.60/linux64/chrome-linux64.zip"
-    dest: "{{ ghostagent_path }}/"
-    remote_src: yes
-  tags:
-    - install
-    - chrome
-
-- name: Download and unarchive ChromeDriver
-  become: true
-  ansible.builtin.unarchive:
-    src: "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.60/linux64/chromedriver-linux64.zip"
-    dest: /opt/
-    remote_src: yes
-  tags:
-    - install
-    - chrome
-
-- name: Move ChromeDriver to ghosts folder and make it executable
-  become: true
-  ansible.builtin.shell:
-    cmd: "mv /opt/chromedriver-linux64/chromedriver {{ ghostagent_path }}/ && chmod 0755 {{ ghostagent_path }}/chromedriver"
-  tags:
-    - install
-    - chrome
-
 - name: Deploy ghostagent systemd service
   become: true
   ansible.builtin.template:
