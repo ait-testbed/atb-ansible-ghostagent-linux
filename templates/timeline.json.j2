@@ -3,12 +3,11 @@
     "status": "Run",
     "TimeLineHandlers": [
         {
-            "HandlerType": "BrowserChrome",
+            "HandlerType": "BrowserFirefox",
             "Initial": "about:config",
             "UtcTimeOn": "00:00:00",
             "UtcTimeOff": "24:00:00",
             "HandlerArgs": {
-                "executable-location": "{{ ghostagent_path }}/chrome-linux64/",
                 "isheadless": "true",
                 "blockimages": "false",
                 "blockstyles": "false",
@@ -247,12 +246,11 @@
             "SchedulerType": "Other"
         },
         {
-            "HandlerType": "BrowserChrome",
+            "HandlerType": "BrowserFirefox",
             "Initial": "about:config",
             "UtcTimeOn": "00:00:00",
             "UtcTimeOff": "24:00:00",
             "HandlerArgs": {
-                "executable-location": "/usr/bin/google-chrome",
                 "isheadless": "false",
                 "blockimages": "true",
                 "blockstyles": "true",
