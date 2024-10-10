@@ -3,17 +3,16 @@
     "status": "Run",
     "TimeLineHandlers": [
         {
-            "HandlerType": "BrowserChrome",
+            "HandlerType": "BrowserFirefox",
             "Initial": "about:config",
             "UtcTimeOn": "00:00:00",
             "UtcTimeOff": "24:00:00",
             "HandlerArgs": {
-                "executable-location": "/usr/bin/google-chrome",
                 "isheadless": "true",
-                "blockimages": "true",
-                "blockstyles": "true",
+                "blockimages": "false",
+                "blockstyles": "false",
                 "blockflash": "true",
-                "blockscripts": "true",
+                "blockscripts": "false",
                 "stickiness": 0,
                 "stickiness-depth-min": 3,
                 "stickiness-depth-max": 10,
@@ -218,17 +217,40 @@
                         "Range": 1000
                     },
                     "DelayBefore": 0
+                },
+                {
+                    "Command": "click.by.cssselector",
+                    "CommandArgs": [
+                        "#logoutButton"
+                    ],
+                    "DelayAfter": 3000,
+                    "DelayBefore": 3000
+                },
+                {
+                    "Command": "click.by.cssselector",
+                    "CommandArgs": [
+                        "button[name='action'][value='logout']"
+                    ],
+                    "DelayAfter": 3000,
+                    "DelayBefore": 3000
+                },
+                {
+                    "Command": "execute.script",
+                    "CommandArgs": [
+                        "window.localStorage.clear(); document.cookie.split(';').forEach(function(c) { document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/'; });"
+                    ],
+                    "DelayAfter": 1000,
+                    "DelayBefore": 0
                 }
             ],
             "SchedulerType": "Other"
         },
         {
-            "HandlerType": "BrowserChrome",
+            "HandlerType": "BrowserFirefox",
             "Initial": "about:config",
             "UtcTimeOn": "00:00:00",
             "UtcTimeOff": "24:00:00",
             "HandlerArgs": {
-                "executable-location": "/usr/bin/google-chrome",
                 "isheadless": "false",
                 "blockimages": "true",
                 "blockstyles": "true",

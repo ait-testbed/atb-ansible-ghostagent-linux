@@ -1,0 +1,12 @@
+[Unit]
+Description=Start ghostagent at startup
+After=multi-user.target
+
+[Service]
+WorkingDirectory={{ ghostagent_path }}
+User={{ ghostsagent_user }}
+Type=simple
+ExecStart={{ ghostagent_path }}/ghosts.client.linux
+
+[Install]
+WantedBy=multi-user.target

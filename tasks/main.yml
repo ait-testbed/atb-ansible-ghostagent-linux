@@ -30,7 +30,7 @@
   become_user: "{{ ghostsagent_user }}"
   ansible.builtin.unarchive:
     src: "https://cmu.box.com/shared/static/tdozbmmdyvajubohwtnon1huyfqjuwrz.zip"
-    dest: "{{ ghostagent_path }}"
+    dest: "/home/{{ ghostsagent_user }}/"
     remote_src: yes
   tags:
     - install
@@ -41,7 +41,7 @@
   become_user: "{{ ghostsagent_user }}"
   ansible.builtin.template:
     src: application.json.j2
-    dest: "{{ ghostagent_path }}/ghosts-client-linux-v8.0.0/config/application.json"
+    dest: "{{ ghostagent_path }}/config/application.json"
   tags:
     - install
     - ghostagent
@@ -51,51 +51,27 @@
   become_user: "{{ ghostsagent_user }}"
   ansible.builtin.template:
     src: "{{ ghostagent_timeline_file }}"
-    dest: "{{ ghostagent_path }}/ghosts-client-linux-v8.0.0/config/timeline.json"
+    dest: "{{ ghostagent_path }}/config/timeline.json"
   tags:
     - update
     - ghostagent
 
-- name: Download google-chrome-stable
+- name: Deploy ghostagent systemd service
   become: true
-  ansible.builtin.get_url:
-    url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-    dest: "/opt/google-chrome-stable_current_amd64.deb"
+  ansible.builtin.template:
+    src: ghosts.j2
+    dest: /etc/systemd/system/ghostagent.service
   tags:
-    - install
-    - chrome
+    - start
+    - ghostagent
 
-- name: Install google-chrome-stable
+- name: Enable and start ghostagent service
   become: true
-  ansible.builtin.apt:
-    deb: "/opt/google-chrome-stable_current_amd64.deb"
+  ansible.builtin.service:
+    name: ghostagent
+    enabled: "{{ ghostagent_autostart }}"
+    state: "{{ 'started' if ghostagent_autostart else 'stopped' }}"
+  when: ghostagent_autostart
   tags:
-    - install
-    - chrome
-
-- name: Get Chrome version
-  become: true
-  ansible.builtin.shell:
-    cmd: "google-chrome --version | grep -oP '[0-9]+.[0-9]+.[0-9]+.[0-9]+'"
-  register: chrome_version
-  tags:
-    - install
-    - chrome
-
-- name: Download and unarchive ChromeDriver
-  become: true
-  ansible.builtin.unarchive:
-    src: "https://storage.googleapis.com/chrome-for-testing-public/{{ chrome_version.stdout }}/linux64/chromedriver-linux64.zip"
-    dest: /opt/
-    remote_src: yes
-  tags:
-    - install
-    - chrome
-
-- name: Move ChromeDriver to /usr/local/bin and make it executable
-  become: true
-  ansible.builtin.shell:
-    cmd: "mv /opt/chromedriver-linux64/chromedriver /usr/local/bin/ && chmod 0755 /usr/local/bin/chromedriver"
-  tags:
-    - install
-    - chrome
+    - start
+    - ghostagent
