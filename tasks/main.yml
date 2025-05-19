@@ -39,6 +39,8 @@
 - name: Ensure config dir exists
   ansible.builtin.file:
     path: "{{ ghostagent_path }}/config"
+    owner: "{{ ghostsagent_user }}"
+    group: "{{ ghostsagent_user }}"
     state: directory
     mode: '0755'
 
