@@ -36,6 +36,12 @@
     - install
     - ghostagent
 
+- name: Ensure config dir exists
+  ansible.builtin.file:
+    path: "{{ ghostagent_path }}/config"
+    state: directory
+    mode: '0755'
+
 - name: Update application.json with the ghostsserver url
   become: true
   become_user: "{{ ghostsagent_user }}"
